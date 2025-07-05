@@ -44,9 +44,13 @@ public class ChatRoomService {
         return roomUserMap.getOrDefault(roomId, new HashSet<>()).size() >= 2;
     }
 
-    public Set<String> getUsersInRoom(String roomId) {
-        return roomUserMap.getOrDefault(roomId, new HashSet<>());
+//    public Set<String> getUsersInRoom(String roomId) {
+//        return roomUserMap.getOrDefault(roomId, new HashSet<>());
+//    }
+    public synchronized Set<String> getUsersInRoom(String roomId) {
+        return new HashSet<>(roomUserMap.getOrDefault(roomId, Set.of()));
     }
+
 
     public record UserSession(String roomId, String username) {}
 }

@@ -3,6 +3,7 @@ package com.chatapp.chatbackend.model;
 
 import lombok.*;
 
+// This is a DTO
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
