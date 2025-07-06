@@ -5,7 +5,9 @@ import com.chatapp.chatbackend.model.Role;
 import com.chatapp.chatbackend.model.User;
 import com.chatapp.chatbackend.repository.UserRepository;
 import com.chatapp.chatbackend.security.JwtService;
+import com.chatapp.chatbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,17 +20,24 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
     private final UserRepository userRepo;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final com.chatapp.chatbackend.service.UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
+
+        // Generate a unique username
+        String generatedUsername = userService.generateUniqueUsername();
+        user.setUsername(generatedUsername);
+
         userRepo.save(user);
-        return "User registered!";
+        return ResponseEntity.ok("User registered with username: " + generatedUsername);
     }
+
 
     @PostMapping("/login")
     public String login(@RequestBody AuthRequest request) {
