@@ -1,11 +1,17 @@
 package com.chatapp.chatbackend.service;
 
+import com.chatapp.chatbackend.model.UserStatusMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ChatRoomService {
+
+    private final SimpMessagingTemplate messagingTemplate;
 
     // roomId → Set of usernames
     private final Map<String, Set<String>> roomUserMap = new HashMap<>();
@@ -20,7 +26,11 @@ public class ChatRoomService {
         if (users.size() >= 2) return false;
 
         boolean added = users.add(username);
-        if (added) sessionMap.put(sessionId, new UserSession(roomId, username));
+        if (added) {
+            sessionMap.put(sessionId, new UserSession(roomId, username));
+            // Broadcast ONLINE status
+            sendStatus(roomId, username, "ONLINE");
+        }
         return added;
     }
 
@@ -31,6 +41,7 @@ public class ChatRoomService {
             if (users.isEmpty()) roomUserMap.remove(roomId);
         }
         sessionMap.remove(sessionId);
+        sendStatus(roomId, username, "OFFLINE");
     }
 
     public synchronized void handleDisconnect(String sessionId) {
@@ -40,6 +51,11 @@ public class ChatRoomService {
         }
     }
 
+    private void sendStatus(String roomId, String username, String status) {
+        UserStatusMessage statusMsg = new UserStatusMessage(username, status);
+        messagingTemplate.convertAndSend("/topic/" + roomId + "/status", statusMsg);
+    }
+
     public synchronized boolean isRoomFull(String roomId) {
         return roomUserMap.getOrDefault(roomId, new HashSet<>()).size() >= 2;
     }
@@ -47,10 +63,10 @@ public class ChatRoomService {
 //    public Set<String> getUsersInRoom(String roomId) {
 //        return roomUserMap.getOrDefault(roomId, new HashSet<>());
 //    }
+
     public synchronized Set<String> getUsersInRoom(String roomId) {
         return new HashSet<>(roomUserMap.getOrDefault(roomId, Set.of()));
     }
-
 
     public record UserSession(String roomId, String username) {}
 }
