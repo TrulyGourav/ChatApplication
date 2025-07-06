@@ -28,7 +28,7 @@ export default function Signup() {
   const signup = async () => {
     if (!validate()) return;
     try {
-      await API.post('/auth/signup', { email, password });
+      await API.post('/auth/register', { email, password });
       toast.success('Signup successful. Redirecting...');
       setTimeout(() => navigate('/'), 1500);
     } catch (err) {

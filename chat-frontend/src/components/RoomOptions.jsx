@@ -31,6 +31,10 @@ export default function RoomOptions() {
 
   const enterSpecificRoom = async () => {
     try {
+      if(!roomId || roomId==""){
+        toast.error("Bad input: Invalid Room Id");
+        return;
+      }
       joinRequestPayload.type = "SPECIFIC";
       joinRequestPayload.roomId = roomId;
 
@@ -42,7 +46,7 @@ export default function RoomOptions() {
     } catch (err) {
       const message =
         err.response?.data?.message || err.message || "Unknown error occurred";
-      toast.error(`No room found with ID: ${roomId}`);
+      toast.error(`No room found with Id "${roomId}"`);
     }
   };
 
