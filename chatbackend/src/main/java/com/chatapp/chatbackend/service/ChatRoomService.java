@@ -15,22 +15,23 @@ public class ChatRoomService {
 
     // roomId → Set of usernames
     private final Map<String, Set<String>> roomUserMap = new HashMap<>();
-
+    private final Map<String, String> roomOwnerMap = new HashMap<>();
     // sessionId → (roomId, username)
     private final Map<String, UserSession> sessionMap = new HashMap<>();
 
-    public synchronized boolean joinRoom(String roomId, String username, String sessionId) {
+    public synchronized boolean joinRoom(String roomId, String username, String sessionId, boolean isOwner) {
         roomUserMap.putIfAbsent(roomId, new HashSet<>());
-
         Set<String> users = roomUserMap.get(roomId);
+
         if (users.size() >= 2) return false;
 
         boolean added = users.add(username);
         if (added) {
             sessionMap.put(sessionId, new UserSession(roomId, username));
-            // Broadcast ONLINE status
+            if (isOwner) roomOwnerMap.put(roomId, username);
             sendStatus(roomId, username, "ONLINE");
         }
+
         return added;
     }
 
@@ -38,7 +39,11 @@ public class ChatRoomService {
         Set<String> users = roomUserMap.get(roomId);
         if (users != null) {
             users.remove(username);
-            if (users.isEmpty()) roomUserMap.remove(roomId);
+            if (users.isEmpty() || isOwner(roomId, username)) {
+                // Cleanup room if empty or owner left
+                roomUserMap.remove(roomId);
+                roomOwnerMap.remove(roomId);
+            }
         }
         sessionMap.remove(sessionId);
         sendStatus(roomId, username, "OFFLINE");
@@ -54,6 +59,22 @@ public class ChatRoomService {
     private void sendStatus(String roomId, String username, String status) {
         UserStatusMessage statusMsg = new UserStatusMessage(username, status);
         messagingTemplate.convertAndSend("/topic/" + roomId + "/status", statusMsg);
+    }
+
+    public synchronized String getAnyAvailableRoom() {
+        return roomUserMap.entrySet().stream()
+                .filter(entry -> entry.getValue().size() < 2)
+                .map(Map.Entry::getKey)
+                .findAny()
+                .orElse(null);
+    }
+
+    public synchronized boolean isActiveAvailableRoom(String roomId) {
+        return roomUserMap.containsKey(roomId) && roomUserMap.get(roomId).size() == 1;
+    }
+
+    private boolean isOwner(String roomId, String username) {
+        return username.equals(roomOwnerMap.get(roomId));
     }
 
     public synchronized boolean isRoomFull(String roomId) {
