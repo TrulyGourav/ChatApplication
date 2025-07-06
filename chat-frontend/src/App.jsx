@@ -3,6 +3,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import RoomOptions from "./components/RoomOptions";
 import ChatWindow from "./components/ChatWindow";
+import Navbar from './components/Navbar';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -10,6 +11,7 @@ export default function App() {
   return (
     <>
       <Router>
+        <Navbar />  {/* Always visible except login/signup */}
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
