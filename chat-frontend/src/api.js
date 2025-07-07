@@ -1,8 +1,9 @@
 // src/api.js
 import axios from 'axios';
+import config from './config';
 
 const API = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: `${config.BASE_URL}/api`,
 });
 
 // ✅ Only attach token for NON-auth routes

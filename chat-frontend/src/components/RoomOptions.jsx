@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api';
 import { toast } from 'react-toastify';
+import config from '../config';
 
 export default function RoomOptions() {
   const [roomId, setRoomId] = useState('');
@@ -12,14 +13,14 @@ export default function RoomOptions() {
     roomId: null
   };
   const createRoom = async () => {
-    joinRequestPayload.type = 'CREATE';
+    joinRequestPayload.type = config.JOIN_TYPES[0];
     const res = await API.post('/chat/join', joinRequestPayload);
     navigate(`/chat/${res.data}`);
   };
 
   const enterRandomRoom = async () => {
     try {
-      joinRequestPayload.type = 'RANDOM';
+      joinRequestPayload.type = config.JOIN_TYPES[1];
     const res = await API.post('/chat/join', joinRequestPayload);
     if (res.status === 200) {
       navigate(`/chat/${res.data}`);
@@ -35,7 +36,7 @@ export default function RoomOptions() {
         toast.error("Bad input: Invalid Room Id");
         return;
       }
-      joinRequestPayload.type = "SPECIFIC";
+      joinRequestPayload.type = config.JOIN_TYPES[2];
       joinRequestPayload.roomId = roomId;
 
       const res = await API.post("/chat/join", joinRequestPayload);
