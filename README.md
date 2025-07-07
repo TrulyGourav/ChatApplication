@@ -72,33 +72,11 @@ The app uses:
 
 ## 🧠 Project Architecture
 
-\`\`\`text
-                 ┌───────────────┐
-                 │   Frontend   │
-                 │  (React.js)  │
-                 └──────┬────────┘
-                        │ HTTP/WebSocket
-                        ▼
-         ┌────────────────────────────┐
-         │        Backend API         │
-         │     (Spring Boot)          │
-         └──────┬───────────┬─────────┘
-                │           │
-                ▼           ▼
-     ┌────────────────┐ ┌──────────────┐
-     │  WebSocket/STOMP│ │  REST APIs   │
-     └────┬────────────┘ └─────┬────────┘
-          │                    │
-          ▼                    ▼
-   ┌──────────────┐     ┌──────────────┐
-   │  RoomManager │     │  UserService │
-   └──────┬───────┘     └─────┬────────┘
-          │                    │
-          ▼                    ▼
-    ┌────────────┐       ┌────────────┐
-    │  Chat DB   │       │  User DB   │
-    └────────────┘       └────────────┘
-\`\`\`
+### 🧠 Project Architecture
+
+<p align="center">
+  <img src="./assets/project-architecture.png" alt="Project Architecture Diagram" width="700"/>
+</p>
 
 ---
 
@@ -106,14 +84,9 @@ The app uses:
 
 ### 🧑‍💻 Client-Server Message Flow
 
-\`\`\`text
-User Types Message ──► STOMP client → /app/message
-                                    ↓
-                       Controller broadcasts to:
-                          /topic/{roomId}
-                                    ↓
-      All users subscribed to /topic/{roomId} receive message
-\`\`\`
+<p align="center">
+  <img src="./assets/chat-flow.png" alt="Chat Flow Diagram" width="600"/>
+</p>
 
 ---
 
@@ -134,31 +107,15 @@ User Types Message ──► STOMP client → /app/message
 
 ### 📁 Backend (\`springboot-chat\`)
 
-\`\`\`
-src/main/java/com/app/chat
-├── config               # Security & WebSocket config
-├── controller           # REST + Message Controllers
-├── model                # DTOs & Entities
-├── repository           # Spring Data JPA
-├── service              # Business logic
-├── utils                # Room/User utilities
-└── ChatApplication.java
-\`\`\`
+<p align="center">
+  <img src="./assets/backend-fs.png" alt="Backend Folder Structure" width="700"/>
+</p>
 
 ### 📁 Frontend (\`react-chat\`)
 
-\`\`\`
-src/
-├── components/
-│   ├── Login.jsx
-│   ├── Signup.jsx
-│   ├── RoomOptions.jsx
-│   └── ChatWindow.jsx
-├── socket.js            # STOMP Socket client
-├── api.js               # Axios API calls
-├── App.jsx              # Route mappings
-└── index.js
-\`\`\`
+<p align="center">
+  <img src="./assets/frontend-fs.png" alt="Frontend Folder Structure" width="700"/>
+</p>
 
 ---
 
