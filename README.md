@@ -7,18 +7,18 @@ A complete real-time **1:1 chat application** that allows users to connect via *
 
 ## 📌 Table of Contents
 
-- [📖 About the Project](##about-the-project)
-- [🎯 Aim](##aim)
-- [✨ Key Features](##key-features)
-- [🧠 Project Architecture](##project-architecture)
-- [🔁 Chat Flow Diagrams](##chat-flow-diagrams)
-- [⚙️ Technologies Used](##technologies-used)
-- [🗂️ Folder Structure](##folder-structure)
-- [🚀 Getting Started](##getting-started)
-- [🧪 How to Test the App](##how-to-test-the-app)
-- [📌 Important Notes](##important-notes)
-- [📷 Screenshots (Optional)](##screenshots-optional)
-- [🙌 Future Improvements](##future-improvements)
+- [📖 About the Project](#about-the-project)
+- [🎯 Aim](#aim)
+- [✨ Key Features](#key-features)
+- [🧠 Project Architecture](#project-architecture)
+- [🔁 Chat Flow Diagrams](#chat-flow-diagrams)
+- [⚙️ Technologies Used](#technologies-used)
+- [🗂️ Folder Structure](#folder-structure)
+- [🚀 Getting Started](#getting-started)
+- [🧪 How to Test the App](#how-to-test-the-app)
+- [📌 Important Notes](#important-notes)
+- [📷 Screenshots (Optional)](#screenshots-optional)
+- [🙌 Future Improvements](#future-improvements)
 
 ---
 

@@ -5,9 +5,15 @@ let stompClient = null;
 
 export const connectSocket = (roomId, onMessageCallback) => {
   console.log("🧪 connectSocket() CALLED with roomId:", roomId);
+  const token = localStorage.getItem('token');
+
   stompClient = new Client({
     webSocketFactory: () => new SockJS('http://localhost:8080/chat'),
     reconnectDelay: 10000,
+    connectHeaders: {
+      roomId,
+      token, // Backend will use this in nativeHeaders
+    },
     onConnect: () => {
       console.log('✅ WebSocket connected');
 

@@ -5,6 +5,8 @@ import com.chatapp.chatbackend.model.Role;
 import com.chatapp.chatbackend.model.User;
 import com.chatapp.chatbackend.repository.UserRepository;
 import com.chatapp.chatbackend.security.JwtService;
+import com.chatapp.chatbackend.service.AuthUtil;
+import com.chatapp.chatbackend.service.ChatRoomService;
 import com.chatapp.chatbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ public class AuthController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ChatRoomService chatRoomService;
     private final com.chatapp.chatbackend.service.UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/register")
@@ -47,5 +50,16 @@ public class AuthController {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         return jwtService.generateToken(userDetails);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        String email = AuthUtil.getCurrentUserEmail();
+
+        // Clean up WebSocket/room state
+//        chatRoomService.removeUserFromAnyRoom(email);
+//        userSessionRegistry.removeUser(email); // optional if you track by email
+
+        return ResponseEntity.ok("User signed out successfully.");
     }
 }
